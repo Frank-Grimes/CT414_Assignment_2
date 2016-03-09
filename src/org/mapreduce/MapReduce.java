@@ -1,7 +1,11 @@
 package org.mapreduce;
 
+import com.sun.xml.internal.bind.v2.TODO;
+
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MapReduce {
 
@@ -33,7 +37,22 @@ public class MapReduce {
             }
         };
 
-        List<Thread> mapCluster = new ArrayList<Thread>(input.size());
+        //TODO this way number of threads has to be fourth argument; should be configurable
+        ExecutorService executorService = Executors.newFixedThreadPool(Integer.parseInt(args[3]));
+        for (int i=0; i<Integer.parseInt(args[3]); i++){
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    //TODO figure out what to put in here
+                }
+            });
+            executorService.execute(t);
+        }
+        executorService.shutdown();
+        while (!executorService.isTerminated()){}
+        System.out.println("All threads finished");
+
+        /*List<Thread> mapCluster = new ArrayList<Thread>(input.size());
         for (Map.Entry<String, String> entry : input.entrySet()) {
             final String file = entry.getKey();
             final String contents = entry.getValue();
@@ -55,7 +74,7 @@ public class MapReduce {
             } catch(InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        }
+        }*/
 
         // GROUP:
         Map<String, List<String>> groupedItems = new HashMap<String, List<String>>();
